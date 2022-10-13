@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
-import db from '../src/db/connection.js';
+import db from '../db/connection.js';
 
 async function createUserQuery(name, email, plainPassword) {
   const SALT = 10;
   const passwordHash = bcrypt.hashSync(plainPassword, SALT);
   return db.query(
     `
-      INSERT INTO users (name, email, password) 
-      VALUES ($1, $2, $3)`,
+      INSERT INTO users (name, email, password, "createdAt") 
+      VALUES ($1, $2, $3, NOW())`,
     [name, email, passwordHash]
   );
 }

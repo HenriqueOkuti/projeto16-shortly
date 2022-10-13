@@ -1,4 +1,4 @@
-import { createUserQuery, getUserByEmail } from '../../queries/queries.js';
+import { createUserQuery, getUserByEmail } from '../queries/queries.js';
 
 export async function createUser(req, res) {
   const user = req.body;
