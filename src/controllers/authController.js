@@ -1,3 +1,4 @@
+import { STATUS_CODE } from '../enums/statusCodes.js';
 import { createUserQuery, getUserByEmail } from '../queries/queries.js';
 
 export async function createUser(req, res) {
@@ -5,13 +6,12 @@ export async function createUser(req, res) {
   try {
     const searchByMail = getUserByEmail(user.email);
     if (searchByMail.rowCount > 0) {
-      return res.sendStatus(409);
+      return res.sendStatus(STATUS_CODE.CONFLICT);
     }
     const { name, email, password } = user;
     await createUserQuery(name, email, password);
-    res.sendStatus(201);
+    res.sendStatus(STATUS_CODE.CREATED);
   } catch (error) {
-    console.log(error.detail);
-    return res.send(error.detail).status(500);
+    return res.send(error.detail).status(STATUS_CODE.SERVER_ERROR);
   }
 }
