@@ -11,7 +11,7 @@ export async function createUser(req, res) {
     await createUserQuery(name, email, password);
     res.sendStatus(201);
   } catch (error) {
-    console.log(error);
-    return res.sendStatus(500);
+    console.log(error.detail);
+    return res.send(error.detail).status(500);
   }
 }
