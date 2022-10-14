@@ -59,7 +59,7 @@ export async function redirectURL(req, res) {
     }
     const [url] = searchQuery.rows;
     await updateURLVisitCount(url.id);
-    res.redirect(url.url);
+    res.redirect(STATUS_CODE.OK, url.url);
   } catch (error) {
     console.log(error);
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
