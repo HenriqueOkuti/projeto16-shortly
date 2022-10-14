@@ -55,6 +55,17 @@ async function queryDeleteURL(id) {
   return db.query('DELETE FROM urls WHERE id=$1;', [id]);
 }
 
+async function queryGetVisitSumById(userId) {
+  return db.query(
+    `SELECT SUM(u."visitCount") FROM urls u WHERE u."userId" = $1;`,
+    [userId]
+  );
+}
+
+async function queryGetURLSbyUserId(userId) {
+  return db.query(`SELECT * FROM urls WHERE urls."userId" = $1;`, [userId]);
+}
+
 export {
   queryCreateUserQuery,
   queryGetUserByEmail,
@@ -66,4 +77,6 @@ export {
   queryGetURLByShortURL,
   queryUpdateURLVisitCount,
   queryDeleteURL,
+  queryGetVisitSumById,
+  queryGetURLSbyUserId,
 };

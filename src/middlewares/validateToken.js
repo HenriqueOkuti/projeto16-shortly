@@ -16,7 +16,7 @@ export async function validateToken(req, res, next) {
     if (!session) {
       return res.status(STATUS_CODE.UNAUTHORIZED).send('No session');
     }
-    const searchQueryUser = await queryGetUserById(session.id);
+    const searchQueryUser = await queryGetUserById(session.userId);
     const [user] = searchQueryUser.rows;
     if (!user) {
       return res.status(STATUS_CODE.UNAUTHORIZED).send('No user');

@@ -80,7 +80,7 @@ export async function deleteURL(req, res) {
       return res.sendStatus(STATUS_CODE.UNAUTHORIZED);
     }
     await queryDeleteURL(id);
-    res.sendStatus(200);
+    res.sendStatus(STATUS_CODE.NO_CONTENT);
   } catch (error) {
     console.log(error);
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
