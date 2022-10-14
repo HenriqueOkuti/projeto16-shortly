@@ -40,6 +40,10 @@ async function createShortURL(url, short, user) {
   );
 }
 
+async function getURLSById(id) {
+  return db.query(`SELECT * FROM urls WHERE id = $1`, [id]);
+}
+
 export {
   createUserQuery,
   getUserByEmail,
@@ -47,4 +51,5 @@ export {
   getSessionByToken,
   getUserById,
   createShortURL,
+  getURLSById,
 };
