@@ -7,7 +7,7 @@ import {
 } from '../controllers/urlsController.js';
 import { validateSchema } from '../middlewares/validateSchemas.js';
 import { validateToken } from '../middlewares/validateToken.js';
-import { urlSchema } from '../schemas/schemas.js';
+import { urlSchema } from '../schemas/allSchemas.js';
 
 const urlsRouter = Router();
 urlsRouter.post(

@@ -1,12 +1,12 @@
 import { nanoid } from 'nanoid';
 import { STATUS_CODE } from '../enums/statusCodes.js';
 import {
-  createShortURL,
-  getURLByShortURL,
-  getURLSById,
-  updateURLVisitCount,
+  queryCreateShortURL,
+  queryGetURLByShortURL,
+  queryGetURLSById,
+  queryUpdateURLVisitCount,
   queryDeleteURL,
-} from '../queries/queries.js';
+} from '../queries/allQueries.js';
 
 export async function shortenURL(req, res) {
   const user = res.locals.user;
@@ -24,7 +24,7 @@ export async function shortenURL(req, res) {
   const CHAR_LIMIT = 8;
   const shortUrl = nanoid(CHAR_LIMIT);
   try {
-    await createShortURL(url, shortUrl, user);
+    await queryCreateShortURL(url, shortUrl, user);
     res.send({ shortUrl }).status(201);
   } catch (error) {
     console.log(error);
@@ -35,7 +35,7 @@ export async function shortenURL(req, res) {
 export async function getURLByID(req, res) {
   const { id } = req.params;
   try {
-    const searchQuery = await getURLSById(id);
+    const searchQuery = await queryGetURLSById(id);
     const [url] = searchQuery.rows;
     if (!url) {
       return res.sendStatus(STATUS_CODE.NOT_FOUND);
@@ -54,12 +54,12 @@ export async function getURLByID(req, res) {
 export async function redirectURL(req, res) {
   const { shortUrl } = req.params;
   try {
-    const searchQuery = await getURLByShortURL(shortUrl);
+    const searchQuery = await queryGetURLByShortURL(shortUrl);
     if (searchQuery.rowCount === 0) {
       return res.sendStatus(STATUS_CODE.NOT_FOUND);
     }
     const [url] = searchQuery.rows;
-    await updateURLVisitCount(url.id);
+    await queryUpdateURLVisitCount(url.id);
     res.redirect(STATUS_CODE.OK, url.url);
   } catch (error) {
     console.log(error);
@@ -71,7 +71,7 @@ export async function deleteURL(req, res) {
   const { id } = req.params;
   const { user } = res.locals;
   try {
-    const searchQuery = await getURLSById(id);
+    const searchQuery = await queryGetURLSById(id);
     if (searchQuery.rowCount === 0) {
       return res.sendStatus(STATUS_CODE.NOT_FOUND);
     }
