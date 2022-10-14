@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { shortenURL, getURLByID } from '../controllers/urlsController.js';
+import {
+  shortenURL,
+  getURLByID,
+  redirectURL,
+} from '../controllers/urlsController.js';
 import { validateSchema } from '../middlewares/validateSchemas.js';
 import { validateToken } from '../middlewares/validateToken.js';
 import { urlSchema } from '../schemas/schemas.js';
@@ -12,5 +16,6 @@ urlsRouter.post(
   shortenURL
 );
 urlsRouter.get('/urls/:id', getURLByID);
+urlsRouter.get('/urls/open/:shortUrl', redirectURL);
 
 export default urlsRouter;
