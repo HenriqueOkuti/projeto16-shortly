@@ -3,6 +3,7 @@ import {
   shortenURL,
   getURLByID,
   redirectURL,
+  deleteURL,
 } from '../controllers/urlsController.js';
 import { validateSchema } from '../middlewares/validateSchemas.js';
 import { validateToken } from '../middlewares/validateToken.js';
@@ -17,5 +18,6 @@ urlsRouter.post(
 );
 urlsRouter.get('/urls/:id', getURLByID);
 urlsRouter.get('/urls/open/:shortUrl', redirectURL);
+urlsRouter.delete('/urls/:id', validateToken, deleteURL);
 
 export default urlsRouter;

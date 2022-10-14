@@ -5,6 +5,7 @@ import {
   getURLByShortURL,
   getURLSById,
   updateURLVisitCount,
+  queryDeleteURL,
 } from '../queries/queries.js';
 
 export async function shortenURL(req, res) {
@@ -60,6 +61,26 @@ export async function redirectURL(req, res) {
     const [url] = searchQuery.rows;
     await updateURLVisitCount(url.id);
     res.redirect(STATUS_CODE.OK, url.url);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+}
+
+export async function deleteURL(req, res) {
+  const { id } = req.params;
+  const { user } = res.locals;
+  try {
+    const searchQuery = await getURLSById(id);
+    if (searchQuery.rowCount === 0) {
+      return res.sendStatus(STATUS_CODE.NOT_FOUND);
+    }
+    const [url] = searchQuery.rows;
+    if (user.id !== url.userId) {
+      return res.sendStatus(STATUS_CODE.UNAUTHORIZED);
+    }
+    await queryDeleteURL(id);
+    res.sendStatus(200);
   } catch (error) {
     console.log(error);
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
