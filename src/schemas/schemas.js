@@ -12,4 +12,8 @@ const userLoginSchema = joi.object({
   password: joi.string().required(),
 });
 
-export { userSchema, userLoginSchema };
+const urlSchema = joi.object({
+  url: joi.string().required(),
+});
+
+export { userSchema, userLoginSchema, urlSchema };

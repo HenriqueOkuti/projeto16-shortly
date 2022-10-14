@@ -23,4 +23,18 @@ async function createUserSession(token, userId) {
   );
 }
 
-export { createUserQuery, getUserByEmail, createUserSession };
+async function getSessionByToken(token) {
+  return db.query(`SELECT *  FROM sessions WHERE token = $1`, [token]);
+}
+
+async function getUserById(id) {
+  return db.query(`SELECT * FROM users WHERE id = $1 `, [id]);
+}
+
+export {
+  createUserQuery,
+  getUserByEmail,
+  createUserSession,
+  getSessionByToken,
+  getUserById,
+};
