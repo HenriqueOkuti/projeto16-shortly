@@ -55,6 +55,10 @@ async function updateURLVisitCount(urlId) {
   );
 }
 
+async function queryDeleteURL(id) {
+  return db.query('DELETE FROM urls WHERE id=$1', [id]);
+}
+
 export {
   createUserQuery,
   getUserByEmail,
@@ -65,4 +69,5 @@ export {
   getURLSById,
   getURLByShortURL,
   updateURLVisitCount,
+  queryDeleteURL,
 };
