@@ -1,8 +1,8 @@
 import { nanoid } from 'nanoid';
 import { STATUS_CODE } from '../enums/statusCodes.js';
-import { createShortURL } from '../queries/queries.js';
+import { createShortURL, getURLSById } from '../queries/queries.js';
 
-export default async function shortenURL(req, res) {
+export async function shortenURL(req, res) {
   const user = res.locals.user;
   const { url } = req.body;
 
@@ -13,8 +13,6 @@ export default async function shortenURL(req, res) {
   const urlRegex =
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
   const regex = new RegExp(urlRegex);
-
-  console.log('match: ', url.match(regex));
 
   if (!url.match(regex)) {
     console.log('invalid');
@@ -27,6 +25,26 @@ export default async function shortenURL(req, res) {
   try {
     await createShortURL(url, shortUrl, user);
     res.send({ shortUrl }).status(201);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+}
+
+export async function getURLByID(req, res) {
+  const { id } = req.params;
+  try {
+    const searchQuery = await getURLSById(id);
+    const [url] = searchQuery.rows;
+    if (!url) {
+      return res.sendStatus(STATUS_CODE.NOT_FOUND);
+    }
+
+    res.send({
+      id: url.id,
+      shortUrl: url.shortURL,
+      url: url.url,
+    });
   } catch (error) {
     console.log(error);
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
