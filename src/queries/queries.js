@@ -31,10 +31,20 @@ async function getUserById(id) {
   return db.query(`SELECT * FROM users WHERE id = $1 `, [id]);
 }
 
+async function createShortURL(url, short, user) {
+  return db.query(
+    `
+  INSERT INTO urls(url, "shortURL", "userId", "createdAt")
+  VALUES ($1, $2, $3, NOW())`,
+    [url, short, user.id]
+  );
+}
+
 export {
   createUserQuery,
   getUserByEmail,
   createUserSession,
   getSessionByToken,
   getUserById,
+  createShortURL,
 };
