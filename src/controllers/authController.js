@@ -18,7 +18,7 @@ export async function createUser(req, res) {
     await createUserQuery(name, email, password);
     res.sendStatus(STATUS_CODE.CREATED);
   } catch (error) {
-    return res.send(error.detail).status(STATUS_CODE.SERVER_ERROR);
+    return res.status(STATUS_CODE.SERVER_ERROR).send(error.detail);
   }
 }
 
