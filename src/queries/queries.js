@@ -16,4 +16,11 @@ async function getUserByEmail(email) {
   return db.query(`SELECT * FROM users WHERE email = $1 `, [email]);
 }
 
-export { createUserQuery, getUserByEmail };
+async function createUserSession(token, userId) {
+  return db.query(
+    `INSERT INTO sessions (token, "userId", "createdAt") VALUES ($1, $2, NOW())`,
+    [token, userId]
+  );
+}
+
+export { createUserQuery, getUserByEmail, createUserSession };
