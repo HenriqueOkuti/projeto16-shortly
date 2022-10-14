@@ -44,6 +44,17 @@ async function getURLSById(id) {
   return db.query(`SELECT * FROM urls WHERE id = $1`, [id]);
 }
 
+async function getURLByShortURL(shortUrl) {
+  return db.query(`SELECT * FROM urls WHERE "shortURL" = $1`, [shortUrl]);
+}
+
+async function updateURLVisitCount(urlId) {
+  return db.query(
+    `UPDATE urls SET "visitCount" = "visitCount" + 1 WHERE id = $1`,
+    [urlId]
+  );
+}
+
 export {
   createUserQuery,
   getUserByEmail,
@@ -52,4 +63,6 @@ export {
   getUserById,
   createShortURL,
   getURLSById,
+  getURLByShortURL,
+  updateURLVisitCount,
 };
