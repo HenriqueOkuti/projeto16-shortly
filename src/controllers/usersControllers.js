@@ -1,5 +1,6 @@
 import { STATUS_CODE } from '../enums/statusCodes.js';
 import {
+  queryGetLinksRanking,
   queryGetURLSbyUserId,
   queryGetVisitSumById,
 } from '../queries/allQueries.js';
@@ -12,7 +13,6 @@ export default async function getUserByToken(req, res) {
     const visitCount = searchQueryVisits.rows[0]?.sum || 0;
     const searchQueryURLS = await queryGetURLSbyUserId(user.id);
     let userURLs = searchQueryURLS.rows;
-
     userURLs = userURLs.map((e) => {
       return {
         id: e.id,
@@ -21,13 +21,22 @@ export default async function getUserByToken(req, res) {
         visitCount: e.visitCount,
       };
     });
-
     res.status(STATUS_CODE.OK).send({
       id: user.id,
       name: user.name,
       visitCount: visitCount,
       shortenedUrls: userURLs,
     });
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+}
+
+export async function getUserRanking(req, res) {
+  try {
+    const result = await queryGetLinksRanking();
+    res.send(result.rows);
   } catch (error) {
     console.log(error);
     res.sendStatus(STATUS_CODE.SERVER_ERROR);
