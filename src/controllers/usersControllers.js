@@ -1,17 +1,15 @@
 import { STATUS_CODE } from '../enums/statusCodes.js';
-import {
-  queryGetLinksRanking,
-  queryGetURLSbyUserId,
-  queryGetVisitSumById,
-} from '../queries/allQueries.js';
+import usersRepository from '../repositories/usersRepository.js';
 
 export default async function getUserByToken(req, res) {
   const { user } = res.locals;
 
   try {
-    const searchQueryVisits = await queryGetVisitSumById(user.id);
+    const searchQueryVisits = await usersRepository.queryGetVisitSumById(
+      user.id
+    );
     const visitCount = searchQueryVisits.rows[0]?.sum || 0;
-    const searchQueryURLS = await queryGetURLSbyUserId(user.id);
+    const searchQueryURLS = await usersRepository.queryGetURLSbyUserId(user.id);
     let userURLs = searchQueryURLS.rows;
     userURLs = userURLs.map((e) => {
       return {
@@ -35,7 +33,7 @@ export default async function getUserByToken(req, res) {
 
 export async function getUserRanking(req, res) {
   try {
-    const result = await queryGetLinksRanking();
+    const result = await usersRepository.queryGetLinksRanking();
     res.send(result.rows);
   } catch (error) {
     console.log(error);

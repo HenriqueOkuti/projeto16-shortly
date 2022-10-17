@@ -1,8 +1,5 @@
 import { STATUS_CODE } from '../enums/statusCodes.js';
-import {
-  queryGetSessionByToken,
-  queryGetUserById,
-} from '../queries/allQueries.js';
+import tokenRepository from '../repositories/tokenRepository.js';
 
 export async function validateToken(req, res, next) {
   const { authorization } = req.headers;
@@ -11,12 +8,16 @@ export async function validateToken(req, res, next) {
     return res.status(STATUS_CODE.UNAUTHORIZED).send('Missing token');
   }
   try {
-    const searchQuerySession = await queryGetSessionByToken(token);
+    const searchQuerySession = await tokenRepository.queryGetSessionByToken(
+      token
+    );
     const [session] = searchQuerySession.rows;
     if (!session) {
       return res.status(STATUS_CODE.UNAUTHORIZED).send('No session');
     }
-    const searchQueryUser = await queryGetUserById(session.userId);
+    const searchQueryUser = await tokenRepository.queryGetUserById(
+      session.userId
+    );
     const [user] = searchQueryUser.rows;
     if (!user) {
       return res.status(STATUS_CODE.UNAUTHORIZED).send('No user');
